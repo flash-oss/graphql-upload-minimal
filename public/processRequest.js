@@ -315,14 +315,8 @@ module.exports = async function processRequest(
           const error = fileError || (released ? exitError : null);
           if (error) throw error;
 
-          if (returnedStreams.has(stream)) {
-            throw new Error(
-              "graphql-upload-minimal does not allow calling createReadStream() multiple times. Please, consume the previously returned stream. Make sure you're not referencing same file twice in your query."
-            );
-          } else {
-            returnedStreams.add(stream);
-            return stream;
-          }
+          returnedStreams.add(stream);
+          return stream;
         },
       };
 
