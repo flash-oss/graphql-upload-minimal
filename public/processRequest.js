@@ -128,7 +128,7 @@ module.exports = async function processRequest(
         });
 
         let exitError;
-        let currentStream;
+        let lastFileStream;
         /**
          * Exits request processing with an error. Successive calls have no effect.
          * @kind function
@@ -139,14 +139,21 @@ module.exports = async function processRequest(
          * @ignore
          */
         const exit = (message, status = 400) => {
+            // None of the tested scenarios cause multiple calls of this function, but
+            // it’t still good to guard against it happening in case it’s possible now
+            // or in the future.
+            // coverage ignore next line
             if (exitError) return;
+
             exitError = new HttpError(status, message);
 
             reject(exitError);
 
             parser.destroy();
 
-            if (currentStream) currentStream.destroy(exitError);
+            if (lastFileStream && !lastFileStream.readableEnded && !lastFileStream.destroyed) {
+                lastFileStream.destroy(exitError);
+            }
 
             if (map) for (const upload of map.values()) if (!upload.file) upload.reject(exitError);
 
@@ -164,8 +171,6 @@ module.exports = async function processRequest(
         let operations;
         let map;
         parser.on("field", (fieldName, value, fieldNameTruncated, valueTruncated) => {
-            if (exitError) return;
-
             if (valueTruncated)
                 return exit(
                     `The '${fieldName}' multipart field value exceeds the ${maxFieldSize} byte size limit.`,
@@ -235,20 +240,12 @@ module.exports = async function processRequest(
 
         let returnedStreams = new Set();
         parser.on("file", (fieldName, stream, filename, encoding, mimetype) => {
-            if (exitError) {
-                ignoreStream(stream);
-                return;
-            }
+            lastFileStream = stream;
 
             if (!map) {
                 ignoreStream(stream);
                 return exit(`Misordered multipart fields; files should follow 'map' (${SPEC_URL}).`);
             }
-
-            currentStream = stream;
-            stream.on("end", () => {
-                currentStream = null;
-            });
 
             const upload = map.get(fieldName);
 
@@ -335,23 +332,11 @@ module.exports = async function processRequest(
         };
 
         if (res && res.once) {
-            res.once("finish", release);
             res.once("close", release);
         }
 
-        /**
-         * Handles when the request is closed before it properly ended.
-         * @kind function
-         * @name processRequest~abort
-         * @ignore
-         */
-        const abort = () => {
-            exit("Request disconnected during file upload stream parsing.", 499);
-        };
-
-        req.once("close", abort);
-        req.once("end", () => {
-            req.removeListener("close", abort);
+        req.once("close", () => {
+            if (!req.readableEnded) exit("Request disconnected during file upload stream parsing.", 499);
         });
 
         if (environment === "gcf") {
