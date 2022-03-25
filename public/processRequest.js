@@ -71,7 +71,7 @@ module.exports = async function processRequest(
         maxFieldSize = 1000000, // 1 MB
         maxFileSize = Infinity,
         maxFiles = Infinity,
-        environment, // "lambda", "gcp"
+        environment, // "lambda", "gcf", "azure"
     } = {}
 ) {
     if (environment === "gcf") {
