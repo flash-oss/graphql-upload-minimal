@@ -8,14 +8,14 @@ const { Readable } = require("stream");
  * @ignore
  */
 module.exports = class CountReadableStream extends Readable {
-  constructor(options) {
-    super(options);
-    this._max = 1000000;
-    this._index = 1;
-  }
+    constructor(options) {
+        super(options);
+        this._max = 1000000;
+        this._index = 1;
+    }
 
-  _read() {
-    const i = this._index++;
-    this.push(i > this._max ? null : Buffer.from(String(i), "ascii"));
-  }
+    _read() {
+        const i = this._index++;
+        this.push(i > this._max ? null : Buffer.from(String(i), "ascii"));
+    }
 };

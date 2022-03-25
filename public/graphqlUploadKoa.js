@@ -44,24 +44,17 @@ const defaultProcessRequest = require("./processRequest");
  *   .listen(3000);
  * ```
  */
-module.exports = function graphqlUploadKoa({
-  processRequest = defaultProcessRequest,
-  ...processRequestOptions
-} = {}) {
-  return async function graphqlUploadKoaMiddleware(ctx, next) {
-    if (!ctx.request.is("multipart/form-data")) return next();
+module.exports = function graphqlUploadKoa({ processRequest = defaultProcessRequest, ...processRequestOptions } = {}) {
+    return async function graphqlUploadKoaMiddleware(ctx, next) {
+        if (!ctx.request.is("multipart/form-data")) return next();
 
-    const finished = new Promise((resolve) => ctx.req.on("end", resolve));
+        const finished = new Promise((resolve) => ctx.req.on("end", resolve));
 
-    try {
-      ctx.request.body = await processRequest(
-        ctx.req,
-        ctx.res,
-        processRequestOptions
-      );
-      await next();
-    } finally {
-      await finished;
-    }
-  };
+        try {
+            ctx.request.body = await processRequest(ctx.req, ctx.res, processRequestOptions);
+            await next();
+        } finally {
+            await finished;
+        }
+    };
 };
