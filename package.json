@@ -3,6 +3,7 @@
   "version": "1.3.0",
   "description": "Minimalistic and developer friendly middleware and an Upload scalar to add support for GraphQL multipart requests (file uploads via queries and mutations) to various Node.js GraphQL servers.",
   "license": "MIT",
+  "types": "./index.d.ts",
   "author": {
     "name": "Jayden Seric",
     "email": "me@jaydenseric.com",
