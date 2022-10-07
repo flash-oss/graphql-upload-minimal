@@ -2,8 +2,8 @@ import { IncomingMessage, ServerResponse } from "http";
 import { GraphQLScalarType } from "graphql";
 import { ReadStream } from "fs";
 
-import { RequestHandler } from "@types/express";
-import { DefaultContext, DefaultState, Middleware } from "@types/koa";
+import { RequestHandler } from "express";
+import { DefaultContext, DefaultState, Middleware } from "koa";
 
 export interface UploadOptions {
   maxFieldSize?: number | undefined;
