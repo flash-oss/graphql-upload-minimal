@@ -122,7 +122,7 @@ const resolvers = {
         const s3 = new S3({ apiVersion: "2006-03-01", params: { Bucket: "my-bucket" } });
 
         for (const doc of docs) {
-          const { createReadStream, filename /*, fieldName, mimetype, encoding */ } = await doc.file;
+          const { createReadStream, filename /*, fieldName, mimetype, encoding */ } = await doc.promise;
           const Key = `${ctx.user.id}/${doc.docType}-${filename}`;
           await s3.upload({ Key, Body: createReadStream() }).promise();
         }
