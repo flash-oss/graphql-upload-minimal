@@ -51,16 +51,6 @@ module.exports = function graphqlUploadExpress({
     return function graphqlUploadExpressMiddleware(request, response, next) {
         if (!request.is("multipart/form-data")) return next();
 
-        const finished = new Promise((resolve) => request.on("end", resolve));
-        const { send } = response;
-
-        response.send = (...args) => {
-            finished.then(() => {
-                response.send = send;
-                response.send(...args);
-            });
-        };
-
         processRequest(request, response, processRequestOptions)
             .then((body) => {
                 request.body = body;
