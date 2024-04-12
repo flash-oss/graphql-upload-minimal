@@ -30,6 +30,7 @@
   "main": "public",
   "exports": {
     ".": {
+      "types": "./public/index.d.ts",
       "import": "./public/index.mjs",
       "require": "./public/index.js"
     },
