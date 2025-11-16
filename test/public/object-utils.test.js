@@ -45,6 +45,20 @@ describe("object-utils", () => {
             message: 'Detected GraphQL query with path "__proto__.isAdmin" as a hacker attack.',
             status: 400,
         });
+
+        const func3 = () => deepSet(query, "__proto__", "BADFOOD");
+        throws(func3, {
+            name: "BadRequestError",
+            message: 'Detected GraphQL query with path "__proto__" as a hacker attack.',
+            status: 400,
+        });
+
+        const func4 = () => deepSet(query, "bla.__proto__", "BADFOOD");
+        throws(func4, {
+            name: "BadRequestError",
+            message: 'Detected GraphQL query with path "bla.__proto__" as a hacker attack.',
+            status: 400,
+        });
     });
 
     it("should set deep path", async () => {
