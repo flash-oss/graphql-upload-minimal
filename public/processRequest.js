@@ -4,6 +4,7 @@ const busboy = require("busboy");
 const ignoreStream = require("./ignore-stream");
 const Upload = require("./Upload");
 const HttpError = require("./HttpError");
+const { isObject, deepSet } = require("./object-utils");
 
 /**
  * Official [GraphQL multipart request spec](https://github.com/jaydenseric/graphql-multipart-request-spec)
@@ -14,25 +15,6 @@ const HttpError = require("./HttpError");
  * @ignore
  */
 const SPEC_URL = "https://github.com/jaydenseric/graphql-multipart-request-spec";
-
-function isObject(val) {
-    return val != null && typeof val === "object" && Array.isArray(val) === false;
-}
-
-/**
- * Deep set value using dot separated `path` of the object.
- * @param object {Object} Any JS object.
- * @param path {String} String like "input.docs.0.file"
- * @param value {*} The value we set.
- * @ignore
- * @private
- */
-function deepSet(object, path, value) {
-    const props = path.split("."); // E.g. "input.docs.0.file" -> ["input", "docs", "0", "file"]
-    while (props.length !== 1) object = object[props.shift()];
-    if (!object) throw new Error(`The path ${path} was not found in the GraphQL query.`);
-    object[props[0]] = value;
-}
 
 const noop = () => {};
 
