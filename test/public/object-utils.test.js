@@ -30,35 +30,37 @@ describe("object-utils", () => {
     });
 
     it("should not prototype pollute", async () => {
-        const query = { bla: {} };
+        for (const p of ["__proto__", "constructor"]) {
+            const query = { bla: {} };
 
-        const func1 = () => deepSet(query, "bla.__proto__.foo", "BADFOOD");
-        throws(func1, {
-            name: "BadRequestError",
-            message: 'Detected GraphQL query with path "bla.__proto__.foo" as a hacker attack.',
-            status: 400,
-        });
+            const func1 = () => deepSet(query, `bla.${p}.foo`, "BADFOOD");
+            throws(func1, {
+                name: "BadRequestError",
+                message: `Detected GraphQL query with path "bla.${p}.foo" as a hacker attack.`,
+                status: 400,
+            });
 
-        const func2 = () => deepSet(query, "__proto__.isAdmin", "BADFOOD");
-        throws(func2, {
-            name: "BadRequestError",
-            message: 'Detected GraphQL query with path "__proto__.isAdmin" as a hacker attack.',
-            status: 400,
-        });
+            const func2 = () => deepSet(query, `${p}.isAdmin`, "BADFOOD");
+            throws(func2, {
+                name: "BadRequestError",
+                message: `Detected GraphQL query with path "${p}.isAdmin" as a hacker attack.`,
+                status: 400,
+            });
 
-        const func3 = () => deepSet(query, "__proto__", "BADFOOD");
-        throws(func3, {
-            name: "BadRequestError",
-            message: 'Detected GraphQL query with path "__proto__" as a hacker attack.',
-            status: 400,
-        });
+            const func3 = () => deepSet(query, `${p}`, "BADFOOD");
+            throws(func3, {
+                name: "BadRequestError",
+                message: `Detected GraphQL query with path "${p}" as a hacker attack.`,
+                status: 400,
+            });
 
-        const func4 = () => deepSet(query, "bla.__proto__", "BADFOOD");
-        throws(func4, {
-            name: "BadRequestError",
-            message: 'Detected GraphQL query with path "bla.__proto__" as a hacker attack.',
-            status: 400,
-        });
+            const func4 = () => deepSet(query, `bla.${p}`, "BADFOOD");
+            throws(func4, {
+                name: "BadRequestError",
+                message: `Detected GraphQL query with path "bla.${p}" as a hacker attack.`,
+                status: 400,
+            });
+        }
     });
 
     it("should set deep path", async () => {
