@@ -251,6 +251,7 @@ module.exports = async function processRequest(
             stream.on("limit", () => {
                 fileError = new HttpError(413, `File truncated as it exceeds the ${maxFileSize} byte size limit.`);
                 stream.unpipe();
+                stream.emit("error", fileError);
             });
 
             stream.on("error", (error) => {
