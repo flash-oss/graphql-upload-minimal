@@ -9,9 +9,9 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         node: ["14", "16", "18", "20", "22", "24"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Setup Node.js v${{ matrix.node }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
       - name: npm install and test
