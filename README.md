@@ -45,7 +45,7 @@ Otherwise, **this module is a drop-in replacement for the `graphql-upload`**.
 
 The following environments are known to be compatible:
 
-- [Node.js](https://nodejs.org) versions 12, 14, 16, and 18. It works in Node 10 even though the unit tests fail.
+- [Node.js](https://nodejs.org) versions 10 and above are supported. (The unit tests fail in Node <22 though.)
 - [AWS Lambda](https://aws.amazon.com/lambda/). [Reported](https://github.com/flash-oss/graphql-upload-minimal/issues/4#issuecomment-664234726) to be working.
 - [Google Cloud Functions (GCF)](https://cloud.google.com/functions) Experimental. Untested.
 - [Azure Functions](https://azure.microsoft.com/en-us/services/functions/) Working.

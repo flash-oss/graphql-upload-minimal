@@ -179,7 +179,7 @@ describe("processRequest serverless", () => {
 
             ok(stream instanceof Readable);
             strictEqual(stream.readableEncoding, null);
-            strictEqual(stream.readableHighWaterMark, 16384);
+            strictEqual(stream.readableHighWaterMark, 65536);
             strictEqual(await streamToString(stream), "a");
         });
 
@@ -212,7 +212,7 @@ describe("processRequest serverless", () => {
 
             ok(stream instanceof Readable);
             strictEqual(stream.readableEncoding, null);
-            strictEqual(stream.readableHighWaterMark, 16384);
+            strictEqual(stream.readableHighWaterMark, 65536);
             strictEqual(await streamToString(stream), "a");
         });
 
@@ -246,7 +246,7 @@ describe("processRequest serverless", () => {
 
             ok(stream instanceof Readable);
             strictEqual(stream.readableEncoding, null);
-            strictEqual(stream.readableHighWaterMark, 16384);
+            strictEqual(stream.readableHighWaterMark, 65536);
             strictEqual(await streamToString(stream), "a");
         });
 
@@ -280,7 +280,7 @@ describe("processRequest serverless", () => {
 
             ok(stream instanceof Readable);
             strictEqual(stream.readableEncoding, null);
-            strictEqual(stream.readableHighWaterMark, 16384);
+            strictEqual(stream.readableHighWaterMark, 65536);
             strictEqual(await streamToString(stream), "a");
         });
     });
